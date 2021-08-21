@@ -10,11 +10,6 @@ async function GetProducto(id) {
     return data;
 }
 
-async function GetProductom(nombre) {
-    let data = await Producto.findOne({ nombre: nombre });
-    return data;
-}
-
 async function NewProducto(producto) {
 
 
