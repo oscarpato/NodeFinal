@@ -4,7 +4,7 @@ const { GetProductos, NewProducto, GetProducto,EditProducto, DeleteProducto } = 
 const { check } = require('express-validator');
 const { validacionesCampos } = require('../../middlewares/validaciones');
 const { existeNombreProducto } = require('../../helpers/validacionesDb')
-const { validaJWT } = require('../../middlewares/validaJWT')
+const { validaJWT, validaRolVendedor } = require('../../middlewares/validaJWT')
 async function getProductos(req, res) {
     try {
         let respuesta = await GetProductos();
@@ -69,21 +69,29 @@ app.get("/api/productos", getProductos);
 app.get("/api/productos/:id", getProducto);
 
 //update
-app.put("/api/productos/:id",editProducto)
+app.put("/api/productos/:id",[
+    validaJWT,
+    validaRolVendedor,
+    check('imagen','Debe ser una direccion valida').isURL({require_protocol:true}),
+],editProducto)
 
 //Post
 app.post("/api/productos", [
-    //validaJWT,
+    validaJWT,
+    validaRolVendedor,
     check('idProducto', 'El idProducto es obligatorio').not().isEmpty(),
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('nombre', 'Ingrese nombre superior a 3 caracteres').isLength({ min: 4 }),
     check('nombre').custom(existeNombreProducto),
+    check('imagen','Debe ser una direccion valida').isURL({require_protocol:true}),
     validacionesCampos
 ], newProducto)
 
 //Delete
 
-app.delete("/api/productos/:id",deleteProducto);
+app.delete("/api/productos/:id",[
+    validaJWT,
+    validaRolVendedor],deleteProducto);
 
 
 module.exports = app;
