@@ -32,7 +32,7 @@ const validaRolAdmin = async (req, res, next) => {
         let user = await Usuario.findOne({usuario:payload.usuario});
         if(!user || user.rol!="ADMIN"){
             return res.status(403).json({
-                msg: "usuario no es ADMIN!!"
+                msg: "USUARIO NO AUTORIZADO"
             })
         }
         //validar admin  
@@ -56,9 +56,9 @@ const validaRolVendedor = async (req, res, next) => {
     try {
         const payload = jwt.verify(token, process.env.SECRETKEY);
         let user = await Usuario.findOne({usuario:payload.usuario});
-        if(!user || user.rol!="VENDEDOR"){
+        if(!user || (user.rol!="VENDEDOR" && user.rol!="ADMIN")){
             return res.status(403).json({
-                msg: "usuario no es VENDEDOR!!"
+                msg: "USUARIO NO AUTORIZADO!!"
             })
         }
         //validar admin  
