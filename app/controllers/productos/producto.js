@@ -17,8 +17,6 @@ async function GetProductom(nombre) {
 
 async function NewProducto(producto) {
 
-    let data2=await GetProductom(nombre);
-    if(!data2){
 
     const { idProducto, nombre, idCategoria,estado, imagen, descripcion} = producto;
 
@@ -33,9 +31,6 @@ async function NewProducto(producto) {
     let data = await nuevoProducto.save();
 
     return data;
-}else{
-    return "El producto ya existe";
-}
 }
 
 async function EditProducto(id,producto){
