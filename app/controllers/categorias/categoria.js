@@ -53,7 +53,7 @@ async function UpdateCategoria(id, categoria){
         ejecucionUpdate = `Categoria ${id} se actualizo correctamente`;
     } catch (err) {
         console.log(err);
-        ejecucionUpdate = `Error al acutualizar Categoria ${id}`;
+        ejecucionUpdate = `Error al actualizar Categoria ${id}`;
     }
     console.log("resultado de ejecucionUpdate: "+ejecucionUpdate);
 

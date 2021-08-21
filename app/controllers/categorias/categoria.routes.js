@@ -4,7 +4,7 @@ const { GetCategorias, NewCategoria, GetCategoria, UpdateCategoria, DeleteCatego
 const { check } = require('express-validator');
 const { validacionesCampos } = require('../../middlewares/validaciones');
 const { existeNombreCategoria } = require('../../helpers/validacionesDb')
-const { validaJWT } = require('../../middlewares/validaJWT')
+const { validaJWT, validaRolAdmin } = require('../../middlewares/validaJWT')
 
 async function getCategorias(req, res) {
     try {
@@ -75,7 +75,8 @@ app.get("/api/categorias/:id", getCategoria);
 
 //Post
 app.post("/api/categorias", [
-    //validaJWT,
+    validaJWT,
+    validaRolAdmin,
     check('idCategoria', 'idCategoria es obligatorio').not().isEmpty(),
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('nombre', 'Ingrese nombre superior a 3 caracteres').isLength({ min: 4 }),
@@ -84,10 +85,16 @@ app.post("/api/categorias", [
 ], newCategoria);
 
 //PUT
-app.put("/api/categorias/:id", updateCategoria);
+app.put("/api/categorias/:id",[
+    validaJWT,
+    validaRolAdmin], 
+    updateCategoria);
 
 //DELETE
-app.delete("/api/categorias/:id", deleteCategoria);
+app.delete("/api/categorias/:id",[
+    validaJWT,
+    validaRolAdmin],
+     deleteCategoria);
 
 
 module.exports = app;

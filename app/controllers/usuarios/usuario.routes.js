@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { GetUsuario, GetUsuarios, LoginUsuario, DeleteUsuario, NewUsuario } = require('./usuario');
+const { GetUsuario, GetUsuarios, LoginUsuario, DeleteUsuario, NewUsuario, EditUsuario } = require('./usuario');
 const { existeNombreUsuario } = require('../../helpers/validacionesDb');
 const { validacionesCampos } = require('../../middlewares/validaciones');
 const { check } = require('express-validator');
@@ -47,16 +47,36 @@ async function newUsuario(req, res) {
         res.send("Error al ingresar usuario");
     }
 }
+async function editUsuario(req,res){
+    try {
+        let id=req.params.usuario
+        let user=req.body;
+        let respuesta= await EditUsuario(id,user)
+        res.send(respuesta);
+    } catch (e) {
+        console.log(e);
+       res.send("Error en la actualizacion de datos")
+        
+    }
+
+}
 
 app.post('/api/login', LoginUsuario);
 
 //usuario CRUD
 app.get("/api/usuarios", getUsuarios);
+
 app.get("/api/usuarios/:usuario", getUsuario);
+
 app.delete("/api/usuarios/:usuario",[
     validaJWT,
     validaRolAdmin,
 ], deleteUsuario);
+
+app.put("/api/usuarios/:usuario",[
+    validaJWT,
+    validaRolAdmin,
+], editUsuario);
 
 app.post("/api/usuarios", [
     validaJWT,
