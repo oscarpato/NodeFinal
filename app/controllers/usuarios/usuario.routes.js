@@ -4,6 +4,7 @@ const { GetUsuario, GetUsuarios, LoginUsuario, DeleteUsuario, NewUsuario } = req
 const { existeNombreUsuario } = require('../../helpers/validacionesDb');
 const { validacionesCampos } = require('../../middlewares/validaciones');
 const { check } = require('express-validator');
+const { validaJWT, validaRolAdmin } = require('../../middlewares/validaJWT')
 
 async function getUsuarios(req, res) {
     try {
@@ -52,9 +53,14 @@ app.post('/api/login', LoginUsuario);
 //usuario CRUD
 app.get("/api/usuarios", getUsuarios);
 app.get("/api/usuarios/:usuario", getUsuario);
-app.delete("/api/usuarios/:usuario", deleteUsuario);
+app.delete("/api/usuarios/:usuario",[
+    validaJWT,
+    validaRolAdmin,
+], deleteUsuario);
 
 app.post("/api/usuarios", [
+    validaJWT,
+    validaRolAdmin,
     check('rol', 'rol es obligatorio').not().isEmpty(),
     check('email', 'Email es obligatorio').not().isEmpty(),
     check('clave', 'Ingrese clave de al menos 8 caracteres').isLength({ min: 8 }),
