@@ -56,11 +56,34 @@ async function NewUsuario(user) {
     return data;
 }
 
+async function EditUsuario(id,usuario){
+    //console.log(id);
+    let data2=await GetUsuario(id);
+    if(data2){
+        if(usuario.usuario) {usu=usuario.usuario; }else{ usu=data2.usuario;}
+        if(usuario.email){em=usuario.email; }else{ em=data2.email;}
+        if(usuario.clave) {cl =usuario.clave; }else{ cl=data2.clave;}
+        if(usuario.rol) {rol =usuario.rol; }else{ rol=data2.rol;}
+
+        let data = await Usuario.updateOne({ usuario: id },{
+            usuario:usu,
+            email:em,
+            clave:cl,
+            rol:rol
+        });
+        //console.log(data2);
+        return data;
+    }else
+        return "Usuario no existente";
+
+}
+
 
 module.exports = {
     GetUsuarios,
     GetUsuario,
     LoginUsuario,
+    EditUsuario,
     DeleteUsuario,
     NewUsuario
 }
